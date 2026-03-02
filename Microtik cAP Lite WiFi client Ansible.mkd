@@ -1,0 +1,23 @@
+# Configure Microtik cAP via Ansible
+## Prepartion
+### Set static IP for Ethernet on PC in samme network
+`sudo ip addr add 192.168.0.100/24 dev enp0s25`
+
+### Install Ansible
+`sudo apt update -y && sudo apt install ansible -y`
+### Install Ansible modules for Microtik
+`ansible-galaxy collection install community.network`
+### Make dir *microtik-cAP*
+`mkdir ~/microtik-cAP`
+## Configure targets
+### Create target list
+`nano ~/microtik-cAP/hosts.ini`
+### Add Microtik cAP into Invertory list
+```
+[mikrotik_cAP]
+192.168.0.107 ansible_user=admin ansible_ssh_pass="" ansible_network_os=community.network.routeros ansible_connection=ansible.netcommon.network_cli
+```
+
+  * `192.168.0.107` - target IP Address for SSH
+  * `ansible_user=admin` - login for Microtik
+  * `ansible_ssh_pass=""` - password for Microtik

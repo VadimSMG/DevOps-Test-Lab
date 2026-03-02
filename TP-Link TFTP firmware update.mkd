@@ -1,0 +1,44 @@
+# Send TP-Link firmware in recovery mode via TFTP
+## 1. Install and config TFTP server
+### 1.1 Install packages
+`sudo apt update && sudo apt install tftp-hpa tftp`
+### 1.2 Confirm TFTP config file
+`sudo nano /etc/default/tftpd-hpa`
+```Bash
+TFTP_USERNAME="tftp"
+TFTP_DIRECTORY="/var/lib/tftpboot" # Робоча папка
+TFTP_ADDRESS="0.0.0.0:69"
+TFTP_OPTIONS="--secure --ipv4 --blocksize 512" # 512 для стабільності
+```
+### 1.3 Set ownership and policy
+```
+sudo chown -R tftp:tftp /var/lib/tftpboot
+sudo chmod -R 777 /var/lib/tftpboot
+```
+### 1.4 Restart TFTP service
+`sudo service tftp-hpa restart`
+## 2. Set network
+### 2.1 Disable Firewall
+`sudo ufw disable`
+### 2.1 Set static IP for Ethernet device
+`sudo ip addr add 192.168.0.100/24 dev enp0s25`
+## 3. Prepare firwmare file 
+### 3.1 Rename to wl or wl_rf.ko
+`cp ./tp_link_firmware.bin ./wl`
+### 3.2 Copy to TFTP files dir
+`cp ./wl /var/lib/tftpboot`
+## 4. Firmware update
+### 4.1 Connect router by LAN1 or LAN4
+### 4.2 Run monitoring
+`sudo tcpdump -i enp0s25 -n udp port 69`
+### 4.3 Set router in recovery mode
+  * Push "Reset" button
+  * Power up router and hold button 10-15 sec
+  * Wait for "RRQ" in tcpdump (~5 min)
+## 5. Check router after update
+### 5.1 Connect to router via browser
+`192.168.0.1` - for original TP-Link
+
+`192.168.1.1` - for OpenWRT
+
+### 5.2 Make factory reset on router
