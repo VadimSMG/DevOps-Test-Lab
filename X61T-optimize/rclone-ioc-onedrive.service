@@ -1,0 +1,36 @@
+[Unit]
+Description=Rclone Mount OneDrive Personal DonNTU
+# Wait for full working network
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Set priotiy for smooth OS start
+Nice=15
+IOSchedulingClass=idle
+# Set delay for smooth OS start
+ExecStartPre=/usr/bin/sleep 10
+#Create dir if not exist
+ExecStartPre=/usr/bin/mkdir -p %h/mnt/ODriveIOCDonNTU
+# Mount and sync Google Drive (DonNTU) by rclone
+ExecStart=/usr/bin/rclone mount onedrive-ioc-donntu: %h/mnt/ODriveIOCDonNTU \
+    --config %h/.config/rclone/rclone.conf \
+    --allow-other \
+    --vfs-cache-mode full \
+    --vfs-cache-max-size 500M \
+    --buffer-size 16M \
+    --dir-cache-time 1m \
+    --vfs-cache-max-age 24h \
+    --attr-timeout 1s \
+    --no-modtime \
+    --vfs-fast-fingerprint \
+    --log-level NOTICE
+# Unmount drive if error
+ExecStop=/bin/fusermount -u %h/mnt/ODriveIOCDonNTU
+# Selfhealing parameters
+Restart=on-failure
+RestartSec=15s
+
+[Install]
+WantedBy=default.target
