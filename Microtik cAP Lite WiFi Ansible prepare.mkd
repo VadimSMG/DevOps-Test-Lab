@@ -1,0 +1,34 @@
+# Configure Microtik for Ansible deployment
+## Clean previois config
+### Find cAP via MAC
+`sudo mndp -i enp0s25`
+### Connect via MAC Telnet
+`sudo mactelnet b8:69:f4:00:4a:76 enp0s25`
+### Clear all configuration (~30 s)
+`/system reset-configuration no-defaults=yes skip-backup=yes`
+## Prepare for Ansible
+### Connect via MAC and set admin password
+`sudo mactelnet b8:69:f4:00:4a:76 enp0s25`
+### Set static IP for cAP Ethernet
+`/ip address add address=192.168.88.1/24 interface=ether1`
+### Enable SSH on cAP Ethernet
+`/ip service enable ssh`
+### Set admin password
+`/user set admin password=your_password`
+## Prepare Linux
+### Install system tools
+`sudo apt install build-essential libssh-dev python3-dev`
+### Make directori for Ansible tests
+```
+mkdir ./ansible-test
+cd ./ansible-test
+```
+### Create isolated env for Ansible
+`python3 -m venv venv`
+### Activeate isolated env
+`source venv/bin/activate`
+### Install ansible tools in venv
+`pip install ansible ansible-pylibssh paramiko`
+
+
+

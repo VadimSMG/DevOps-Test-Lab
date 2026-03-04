@@ -1,0 +1,19 @@
+# Export settings from Microtik cAP
+## Configure connection
+### Set static IP to PC
+`sudo ip addr add 192.168.1.222/24 dev enp0s25`
+### Find Microtik MAC address
+`sudo mndp -i enp0s25`
+### Connect via MAC
+`sudo mactelnet b8:69:f4:00:4a:76 enp0s25`
+### Set root static IP for Microtik
+`/ip address add address=13.13.0.1/24 interface=bridge-lan`
+### Set static IP for PC in same network
+`sudo ip addr add 13.13.0.2/24 dev enp0s25`
+## Export config file
+### Check SSH connection
+`ssh admin@13.13.0.1`
+### Create config file
+`/export file=pseudobridge_config`
+### Copy config via SCP
+`scp admin@13.13.0.1:/pseudobridge_config.rsc /home/sandrat/DevOps-Test-Lab/`

@@ -1,0 +1,106 @@
+# Configuring Microtik cAP Lite (id: RBcAPL-2nD) as WiFi pseudobridge
+## Config access from Ethernet
+### Check WiFi adapter name *(wlan or wsl)*
+`ip link`
+### Connect to default WiFi via CLI *(_77 - two last numbers of MAC address)*
+`nmcli dev wifi connect MikroTik-004A77`
+### Confirm PC gets IP address *(192.168.88._)*
+`ip addr show wls3`
+### Use *mndp* via WiFi interface to find Microtik router
+`sudo mndp -i wls3`
+### Use *mactelnet* for MAC connection *(Login: admin, no password)*
+`sudo mactelnet b8:69:f4:00:4a:77 -i wls3`
+### Reset default limitation *(the AP will reboot and WiFi turns off)*
+`/system reset-configuration no-defaults=yes skip-backup=yes`
+
+  * `/system reset-configuration` - init to remove default database (IP, firewall, interfaces etc)
+  * `no-defaults=yes` - don't run any default config (no firewall, ip 0.0.0.0, allow Ethernet access)
+  * `skip-backup=yes` - don't create backups after reset (no *.backup* files)
+
+## Config AP as WiFi client
+### Check Ethernet adapter name
+`ip link`
+### Use *mndp* via WiFi interface to find Microtik router
+`sudo mndp -i enp0s25`
+### Use *mactelnet* for MAC connection *(Login: admin, no password)*
+`sudo mactelnet b8:69:f4:00:4a:76 enp0s25`
+### Create bridge WAN-LAN
+```
+/interface bridge add name=bridge-lan
+/interface bridge port add bridge=bridge-lan interface=ether1
+/interface bridge port add bridge=bridge-lan interface=wlan1
+```
+
+  * `/interface bridge` - **PATH** to confgire bridges
+  * `/interface bridge port` - **PATH** to configure ports in bridges
+  * `add` - **ACTION** create new communication item
+  * `bridge=bridge-lan` - **WHERE** connecting
+  * `interface=wlan1` - **WHAT** connecting
+
+### Configure WiFi client
+```
+/interface wireless security-profiles add name=home_pass mode=dynamic-keys authentication-types=wpa2-psk wpa2-pre-shared-key="MAIN_WIFI_PASSWORD"
+```
+  * `/interface wireless security-profiles` - **PATH** to security profiles
+  * `add` - **ACTION** for adding new security profile
+  * `name=home_pass` - **LABEL** for securіty profile
+  * `mode=dynamic-keys` - **HOW** to work with security keys *(dynamic-keys for WPA/WPA2 encoding)*
+  * `authentication-types=wpa2-psk` - **PROTOCOL** for preshared keys *(psk)*
+  * `wpa2-pre-shared-key="MAIN_WIFI_PASSWORD"` - **PASSWORD** for WiFi network
+
+### Scan network SSID
+`/interface wireless scan wlan1`
+
+```
+/interface wireless set wlan1 mode=station-pseudobridge ssid="MAIN_WIFI_SSID" security-profile=home_pass disabled=no
+```
+  * `/interface wireless` - **PATH** to wireless interface config
+  * `set wlan1` - **ACTION** for change config for *wlan1* interface
+  * `mode=station-pseudobridge` - **HOW** AP will work in network (*station-pseudobridge* will use MAC from AP not from PC)
+  * `ssid="MAIN_WIFI_SSID"` - **SSID** for WiFi network where AP will be client
+  * `security-profile=home_pass` - **WHAT** security profile need to use
+  * `disabled=no` - **ENABLE** wireless insterface after full reset
+
+### Get IP from main WiFi router
+```
+/ip dhcp-client add interface=bridge-lan disabled=no
+```
+  * `/ip dhcp-client` - **PATH** to DCHP client config
+  * `add` - **ACTION** to get new IP address
+  * `interface=bridge-lan` - **WHERE** need to find main WiFi router
+  * `disabled=no` - **ENABLE** DHCP client now
+
+## Check network connection
+### Check registration table
+`/interface wireless registration-table print`
+
+Must look like:
+
+|   #|INTERFACE|RADIO-NAME|MAC-ADDRESS      |AP   |SIGNAL-STRENGTH|TX-RATE|UPTIME|
+|----|---------|----------|-----------------|-----|---------------|-------|------|
+|   0|wlan1    |          |3C:84:6A:2E:73:71|yes  |-51dBm@1Mbps   |54Mbps |17m23s|
+
+### Check DHCP on Microtik AP  
+`/ip dhcp-client print`
+
+Must look like:
+
+|#    |INTERFACE |USE-PEER-DNS|ADD-DEFAULT-ROUTE|STATUS|ADDRESS         |
+|-----|----------|------------|-----------------|------|----------------|
+|0    |bridge-lan|yes         |yes              |bound |192.168.0.107/24|
+
+### Set rooting static IP
+`/ip address add address=13.13.0.1/24 interface=bridge-lan`
+### Set static IP for PC
+`sudo ip addr add 13.13.0.2/24 dev enp0s25`
+### Reset IP address on connected PC
+`sudo dhclient -r enp0s25 && sudo dhclient enp0s25`
+### Check new IP address for PC
+`ip addr show enp0s25`
+## Allow search MAC from all interfaces
+```
+/tool mac-server set allowed-interface-list=all
+/tool mac-server mac-winbox set allowed-interface-list=all
+```
+
+

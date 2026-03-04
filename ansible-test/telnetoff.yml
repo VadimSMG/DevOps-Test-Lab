@@ -1,0 +1,9 @@
+- name: "Security Hardening"
+  hosts: mikrotik
+  gather_facts: no
+
+  tasks: 
+    - name: "Turn off telnet"
+      community.routeros.command:
+        commands:
+          - /ip service disable telnet
