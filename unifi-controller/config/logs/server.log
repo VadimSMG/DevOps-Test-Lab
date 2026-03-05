@@ -1,0 +1,183 @@
+[2026-03-05 12:21:25,748] <launcher> INFO  launcher - Initializing on Linux(6.12.73+deb13-amd64), jre17(17.0.9)
+[2026-03-05 12:21:25,756] <launcher> INFO  system - *** Running for the first time, creating identity ***
+[2026-03-05 12:21:25,757] <launcher> INFO  system - UUID: 64d4d5b5-c518-4716-af55-270a21877e48
+[2026-03-05 12:21:25,835] <launcher> INFO  system - Reporter UUID: 0a1e0072-582e-491f-ab22-33a707f459ef
+[2026-03-05 12:21:29,797] <launcher> INFO  tomcat - Adding basic REST API support during the startup
+[2026-03-05 12:21:33,627] <launcher> INFO  system - Tomcat startup took 6161ms
+[2026-03-05 12:21:33,718] <launcher> INFO  tomcat - Adding basic REST API support during the startup
+[2026-03-05 12:21:52,655] <launcher> INFO  db     - Starting database service initialization...
+[2026-03-05 12:21:52,657] <launcher> INFO  db     - waiting for db connection...
+[2026-03-05 12:21:52,658] <db-server> INFO  db     - Checking if database needs to be shut down
+[2026-03-05 12:21:54,044] <db-server> INFO  db     - Database was not running
+[2026-03-05 12:21:54,045] <db-server> INFO  db     - Database configuration, dir=/usr/lib/unifi/data/db, port=27117
+[2026-03-05 12:21:54,156] <db-server> INFO  db     - Starting database process...
+[2026-03-05 12:21:54,163] <launcher> INFO  db     - Connecting to mongodb://localhost:27117
+[2026-03-05 12:21:54,200] <launcher> INFO  db     - db connection established...
+[2026-03-05 12:21:54,226] <db-server> INFO  db     - 2026-03-05T12:21:54.225+0200 I STORAGE  [main] Engine custom option: cache_size=256M
+[2026-03-05 12:22:00,628] <launcher> INFO  db     - db connected (v3.6.8@mongodb://localhost:27117, journal enabled)
+[2026-03-05 12:22:09,460] <launcher> INFO  db     - Database service initialized...
+[2026-03-05 12:22:09,523] <launcher> INFO  system - ======================================================================
+[2026-03-05 12:22:09,523] <launcher> INFO  system - UniFi 8.0.24 (build atag_8.0.24_24385 - release/release) is started
+[2026-03-05 12:22:09,524] <launcher> INFO  system - Environment: UniFi-OS[false], UniFi-Cloud[false], UniFi-MongoService[false]
+[2026-03-05 12:22:09,525] <launcher> INFO  system - ======================================================================
+[2026-03-05 12:22:09,527] <launcher> INFO  system - BASE dir:/usr/lib/unifi
+[2026-03-05 12:22:09,530] <launcher> INFO  system - Current System IP: 192.168.10.122
+[2026-03-05 12:22:09,546] <launcher> INFO  system - Hostname: X61T
+[2026-03-05 12:22:09,548] <launcher> INFO  system - ubic.env: prod
+[2026-03-05 12:22:23,541] <launcher> WARN  CustomConversions - Registering converter from class java.time.LocalDateTime to class org.joda.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type; You might want to check your annotation setup at the converter implementation
+[2026-03-05 12:22:36,166] <launcher> WARN  system - Country Code is not configured for Site with ID=69a95951c69ce44ff2dafe78
+[2026-03-05 12:22:36,168] <launcher> WARN  system - Country Code is not configured for Site with ID=69a95951c69ce44ff2dafe78
+[2026-03-05 12:22:38,275] <launcher> WARN  CustomConversions - Registering converter from class java.time.LocalDateTime to class org.joda.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type; You might want to check your annotation setup at the converter implementation
+[2026-03-05 12:22:56,074] <ModelLifecycleManager-startStop> WARN  dev    - failed to read /usr/lib/unifi/data/model_lifecycles.json - /usr/lib/unifi/data/model_lifecycles.json (No such file or directory)
+[2026-03-05 12:22:58,359] <launcher> INFO  productinfo - Using controller channel=RELEASE, firmware channel=RELEASE. Available controller channels=[RELEASE], available firmware channels=[RELEASE]. SSO is disabled.
+[2026-03-05 12:22:58,611] <launcher> INFO  tomcat - systemd: Watchdog ping NOT enabled
+[2026-03-05 12:22:58,612] <launcher> INFO  tomcat - systemd: Startup completed. Ready for watchdog keep-alive checking.
+[2026-03-05 12:22:58,726] <launcher> INFO  sdnotify - ubnt_sdnotify_jni is loaded from: /usr/lib/unifi/lib/native/Linux/x86_64/libubnt_sdnotify_jni.so
+[2026-03-05 12:23:59,265] <autoupdate-check> INFO  productinfo - firmware[BZ2] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,270] <autoupdate-check> INFO  productinfo - firmware[BZ2LR] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,270] <autoupdate-check> INFO  productinfo - firmware[S216150] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,285] <autoupdate-check> INFO  productinfo - firmware[S224250] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,286] <autoupdate-check> INFO  productinfo - firmware[S224500] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,290] <autoupdate-check> INFO  productinfo - firmware[S248500] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,291] <autoupdate-check> INFO  productinfo - firmware[S248750] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,291] <autoupdate-check> INFO  productinfo - firmware[S28150] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,291] <autoupdate-check> INFO  productinfo - firmware[U2HSR] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,291] <autoupdate-check> INFO  productinfo - firmware[U2IW] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,292] <autoupdate-check> INFO  productinfo - firmware[U2Lv2] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,292] <autoupdate-check> INFO  productinfo - firmware[U2O] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,292] <autoupdate-check> INFO  productinfo - firmware[U2Sv2] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,292] <autoupdate-check> INFO  productinfo - firmware[U5O] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,302] <autoupdate-check> INFO  productinfo - firmware[U6ENT] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,303] <autoupdate-check> INFO  productinfo - firmware[U6ENTIW] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,303] <autoupdate-check> INFO  productinfo - firmware[U6EXT] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,303] <autoupdate-check> INFO  productinfo - firmware[U6IW] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,304] <autoupdate-check> INFO  productinfo - firmware[U6M] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,304] <autoupdate-check> INFO  productinfo - firmware[U7EDU] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,304] <autoupdate-check> INFO  productinfo - firmware[U7HD] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,304] <autoupdate-check> INFO  productinfo - firmware[U7IW] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,304] <autoupdate-check> INFO  productinfo - firmware[U7IWP] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,305] <autoupdate-check> INFO  productinfo - firmware[U7LR] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,305] <autoupdate-check> INFO  productinfo - firmware[U7LT] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,305] <autoupdate-check> INFO  productinfo - firmware[U7MP] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,305] <autoupdate-check> INFO  productinfo - firmware[U7MSH] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,305] <autoupdate-check> INFO  productinfo - firmware[U7NHD] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,306] <autoupdate-check> INFO  productinfo - firmware[U7P] new version (4.3.28.11361) is available
+[2026-03-05 12:23:59,306] <autoupdate-check> INFO  productinfo - firmware[U7PG2] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,315] <autoupdate-check> INFO  productinfo - firmware[U7PRO] new version (8.4.6.18068) is available
+[2026-03-05 12:23:59,317] <autoupdate-check> INFO  productinfo - firmware[U7SHD] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,324] <autoupdate-check> INFO  productinfo - firmware[U7UKU] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,324] <autoupdate-check> INFO  productinfo - firmware[UACCMPOEAF] new version (6.5.87.14874) is available
+[2026-03-05 12:23:59,324] <autoupdate-check> INFO  productinfo - firmware[UAE6] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,325] <autoupdate-check> INFO  productinfo - firmware[UAIW6] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,325] <autoupdate-check> INFO  productinfo - firmware[UAL6] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,328] <autoupdate-check> INFO  productinfo - firmware[UALR6] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,329] <autoupdate-check> INFO  productinfo - firmware[UALR6v2] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,329] <autoupdate-check> INFO  productinfo - firmware[UALRPL6] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,333] <autoupdate-check> INFO  productinfo - firmware[UAM6] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,333] <autoupdate-check> INFO  productinfo - firmware[UAP6MP] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,333] <autoupdate-check> INFO  productinfo - firmware[UAPL6] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,339] <autoupdate-check> INFO  productinfo - firmware[UBB] new version (3.2.4.338) is available
+[2026-03-05 12:23:59,339] <autoupdate-check> INFO  productinfo - firmware[UBBXG] new version (2.1.2.268) is available
+[2026-03-05 12:23:59,339] <autoupdate-check> INFO  productinfo - firmware[UCI] new version (1.4.3.384) is available
+[2026-03-05 12:23:59,340] <autoupdate-check> INFO  productinfo - firmware[UCK] new version (1.1.19.f4a17b0) is available
+[2026-03-05 12:23:59,340] <autoupdate-check> INFO  productinfo - firmware[UCKG2] new version (2.1.11.a7986ca) is available
+[2026-03-05 12:23:59,340] <autoupdate-check> INFO  productinfo - firmware[UCKP] new version (2.1.11.a7986ca) is available
+[2026-03-05 12:23:59,340] <autoupdate-check> INFO  productinfo - firmware[UCXG] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,340] <autoupdate-check> INFO  productinfo - firmware[UDM] new version (1.12.30.4325) is available
+[2026-03-05 12:23:59,341] <autoupdate-check> INFO  productinfo - firmware[UDMB] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,341] <autoupdate-check> INFO  productinfo - firmware[UDMPRO] new version (1.12.30.4325) is available
+[2026-03-05 12:23:59,341] <autoupdate-check> INFO  productinfo - firmware[UFLHD] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,341] <autoupdate-check> INFO  productinfo - firmware[UGW3] new version (4.4.57.5578372) is available
+[2026-03-05 12:23:59,341] <autoupdate-check> INFO  productinfo - firmware[UGW4] new version (4.4.57.5578372) is available
+[2026-03-05 12:23:59,342] <autoupdate-check> INFO  productinfo - firmware[UGWXG] new version (4.4.57.5578378) is available
+[2026-03-05 12:23:59,342] <autoupdate-check> INFO  productinfo - firmware[UHDIW] new version (6.7.41.15623) is available
+[2026-03-05 12:23:59,354] <autoupdate-check> INFO  productinfo - firmware[ULTE] new version (7.0.110.16137) is available
+[2026-03-05 12:23:59,354] <autoupdate-check> INFO  productinfo - firmware[ULTEPEU] new version (7.0.110.16137) is available
+[2026-03-05 12:23:59,355] <autoupdate-check> INFO  productinfo - firmware[ULTEPUS] new version (7.0.110.16137) is available
+[2026-03-05 12:23:59,357] <autoupdate-check> INFO  productinfo - firmware[UP1] new version (2.2.6.532) is available
+[2026-03-05 12:23:59,359] <autoupdate-check> INFO  productinfo - firmware[UP6] new version (2.2.6.532) is available
+[2026-03-05 12:23:59,361] <autoupdate-check> INFO  productinfo - firmware[US16P150] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,362] <autoupdate-check> INFO  productinfo - firmware[US24] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,364] <autoupdate-check> INFO  productinfo - firmware[US24P250] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,365] <autoupdate-check> INFO  productinfo - firmware[US24P500] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,368] <autoupdate-check> INFO  productinfo - firmware[US24PL2] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,373] <autoupdate-check> INFO  productinfo - firmware[US24PRO] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,373] <autoupdate-check> INFO  productinfo - firmware[US24PRO2] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,373] <autoupdate-check> INFO  productinfo - firmware[US48] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,373] <autoupdate-check> INFO  productinfo - firmware[US48P500] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,374] <autoupdate-check> INFO  productinfo - firmware[US48P750] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,374] <autoupdate-check> INFO  productinfo - firmware[US48PL2] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,380] <autoupdate-check> INFO  productinfo - firmware[US48PRO] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,381] <autoupdate-check> INFO  productinfo - firmware[US48PRO2] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,391] <autoupdate-check> INFO  productinfo - firmware[US624P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,391] <autoupdate-check> INFO  productinfo - firmware[US648P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,392] <autoupdate-check> INFO  productinfo - firmware[US68P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,392] <autoupdate-check> INFO  productinfo - firmware[US6XG150] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,392] <autoupdate-check> INFO  productinfo - firmware[US8] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,392] <autoupdate-check> INFO  productinfo - firmware[US8P150] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,393] <autoupdate-check> INFO  productinfo - firmware[US8P60] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,393] <autoupdate-check> INFO  productinfo - firmware[USAGGPRO] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,393] <autoupdate-check> INFO  productinfo - firmware[USC8] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,393] <autoupdate-check> INFO  productinfo - firmware[USC8P450] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,393] <autoupdate-check> INFO  productinfo - firmware[USF5P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,394] <autoupdate-check> INFO  productinfo - firmware[USFXG] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,394] <autoupdate-check> INFO  productinfo - firmware[USL16LP] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,394] <autoupdate-check> INFO  productinfo - firmware[USL16LPB] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,407] <autoupdate-check> INFO  productinfo - firmware[USL16P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,407] <autoupdate-check> INFO  productinfo - firmware[USL16PB] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,408] <autoupdate-check> INFO  productinfo - firmware[USL24] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,408] <autoupdate-check> INFO  productinfo - firmware[USL24B] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,408] <autoupdate-check> INFO  productinfo - firmware[USL24P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,408] <autoupdate-check> INFO  productinfo - firmware[USL24PB] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,409] <autoupdate-check> INFO  productinfo - firmware[USL48] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,409] <autoupdate-check> INFO  productinfo - firmware[USL48B] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,409] <autoupdate-check> INFO  productinfo - firmware[USL48P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,409] <autoupdate-check> INFO  productinfo - firmware[USL48PB] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,409] <autoupdate-check> INFO  productinfo - firmware[USL8A] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,410] <autoupdate-check> INFO  productinfo - firmware[USL8LP] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,410] <autoupdate-check> INFO  productinfo - firmware[USL8LPB] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,417] <autoupdate-check> INFO  productinfo - firmware[USL8MP] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,426] <autoupdate-check> INFO  productinfo - firmware[USLP8P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,427] <autoupdate-check> INFO  productinfo - firmware[USM8P] new version (2.1.8.971) is available
+[2026-03-05 12:23:59,427] <autoupdate-check> INFO  productinfo - firmware[USM8P210] new version (2.1.8.971) is available
+[2026-03-05 12:23:59,427] <autoupdate-check> INFO  productinfo - firmware[USM8P60] new version (2.1.8.971) is available
+[2026-03-05 12:23:59,427] <autoupdate-check> INFO  productinfo - firmware[USMINI] new version (2.1.6.762) is available
+[2026-03-05 12:23:59,428] <autoupdate-check> INFO  productinfo - firmware[USMINI2] new version (2.1.6.1012) is available
+[2026-03-05 12:23:59,428] <autoupdate-check> INFO  productinfo - firmware[USPM24] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,428] <autoupdate-check> INFO  productinfo - firmware[USPM24P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,428] <autoupdate-check> INFO  productinfo - firmware[USPM48] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,429] <autoupdate-check> INFO  productinfo - firmware[USPM48P] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,429] <autoupdate-check> INFO  productinfo - firmware[USPPDUHD] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,429] <autoupdate-check> INFO  productinfo - firmware[USPPDUP] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,432] <autoupdate-check> INFO  productinfo - firmware[USPRPS] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,433] <autoupdate-check> INFO  productinfo - firmware[USPRPSP] new version (7.1.26.15869) is available
+[2026-03-05 12:23:59,434] <autoupdate-check> INFO  productinfo - firmware[USXG] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,434] <autoupdate-check> INFO  productinfo - firmware[USXG24] new version (7.2.123.16565) is available
+[2026-03-05 12:23:59,436] <autoupdate-check> INFO  productinfo - firmware[UX] new version (4.0.12.17054) is available
+[2026-03-05 12:23:59,439] <autoupdate-check> INFO  productinfo - firmware[UXBSDM] new version (6.8.2.15592) is available
+[2026-03-05 12:23:59,440] <autoupdate-check> INFO  productinfo - firmware[UXG] new version (5.0.12.30269) is available
+[2026-03-05 12:23:59,440] <autoupdate-check> INFO  productinfo - firmware[UXGB] new version (5.0.12.30269) is available
+[2026-03-05 12:23:59,440] <autoupdate-check> INFO  productinfo - firmware[UXGENT] new version (5.0.12.30269) is available
+[2026-03-05 12:23:59,440] <autoupdate-check> INFO  productinfo - firmware[UXGPRO] new version (1.13.8.4578) is available
+[2026-03-05 12:23:59,441] <autoupdate-check> INFO  productinfo - firmware[UXGPROV2] new version (5.0.12.30269) is available
+[2026-03-05 12:23:59,441] <autoupdate-check> INFO  productinfo - firmware[UXSDM] new version (6.8.2.15592) is available
+[2026-03-05 12:25:33,798] <webapi-3> WARN  system - Country Code is not configured for Site with ID=69a95951c69ce44ff2dafe78
+[2026-03-05 12:25:40,572] <webapi-3> WARN  PageNotFound - No mapping for GET /fonts/UI_Sans_v8_Regular.eb36d6ff9c768a1639ca397b4dd84137.woff2
+[2026-03-05 12:25:40,715] <webapi-6> WARN  PageNotFound - No mapping for GET /fonts/Lato-Regular.bd03a2cc277bbbc338d464e679fe9942.woff2
+[2026-03-05 12:25:40,845] <webapi-8> WARN  PageNotFound - No mapping for GET /fonts/Lato-Regular.27bd77b9162d388cb8d4c4217c7c5e2a.woff
+[2026-03-05 12:25:40,980] <webapi-3> WARN  PageNotFound - No mapping for GET /fonts/Lato-Regular.6d4e78225df0cfd5fe1bf3e8547fefe4.ttf
+[2026-03-05 12:25:42,149] <webapi-7> WARN  PageNotFound - No mapping for GET /fonts/UI_Sans_v8_Bold.a04aa79f656e7d14d4034369feb4b217.woff2
+[2026-03-05 12:25:42,764] <webapi-3> WARN  PageNotFound - No mapping for GET /fonts/Lato-Bold.cccb897485813c7c256901dbca54ecf2.woff2
+[2026-03-05 12:25:43,437] <webapi-7> WARN  PageNotFound - No mapping for GET /fonts/Lato-Bold.d878b6c29b10beca227e9eef4246111b.woff
+[2026-03-05 12:25:43,562] <webapi-11> WARN  PageNotFound - No mapping for GET /fonts/Lato-Bold.5b1b8b856d7a8cb1cb0bae6d0573f2e9.ttf
+[2026-03-05 12:29:08,553] <external-cmd1> WARN  dev    - [sshCommand exec] Execute SSH without host key verification!
+[2026-03-05 12:29:10,545] <inform-3> INFO  adopt  - Device[00:27:22:b6:66:2b] adoption - completed
+[2026-03-05 12:29:10,559] <inform-3> WARN  inform - inform ip changed (null -> 192.168.1.133), re-provisioning scheduled
+[2026-03-05 12:31:26,908] <webapi-7> WARN  sanitize - Invalid key exists in Device payload, key=mesh_uplink_1
+[2026-03-05 12:31:26,908] <webapi-7> WARN  sanitize - Invalid key exists in Device payload, key=mesh_uplink_2
+[2026-03-05 12:36:46,846] <inform-4> WARN  dev    - Device BZ2[00:27:22:b6:66:2b] will be upgraded to version: 4.3.28.11361
+[2026-03-05 12:49:46,194] <inform-4> WARN  dev    - Device BZ2[00:27:22:b6:66:2b] will be upgraded to version: unknown
+[2026-03-05 13:00:52,236] <webapi-21> WARN  sanitize - Invalid key exists in WlanConf payload, key=minrate_ng_mgmt_rate_kbps
+[2026-03-05 13:00:52,236] <webapi-21> WARN  sanitize - Invalid key exists in WlanConf payload, key=minrate_ng_beacon_rate_kbps
+[2026-03-05 13:00:52,236] <webapi-21> WARN  sanitize - Invalid key exists in WlanConf payload, key=minrate_na_mgmt_rate_kbps
+[2026-03-05 13:00:52,236] <webapi-21> WARN  sanitize - Invalid key exists in WlanConf payload, key=minrate_na_beacon_rate_kbps

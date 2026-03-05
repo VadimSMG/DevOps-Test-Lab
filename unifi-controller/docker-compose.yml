@@ -1,0 +1,14 @@
+version: "2.1"
+services:
+  unifi-controller:
+    image: lscr.io/linuxserver/unifi-controller:latest
+    container_name: unifi-controller
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Kyiv
+      - MEM_LIMIT=1024 # Обмеження пам'яті (актуально для вашого X61 з 6Гб)
+    volumes:
+      - ./config:/config
+    network_mode: host # Це важливо для виявлення точки в L2 мережі
+    restart: unless-stopped

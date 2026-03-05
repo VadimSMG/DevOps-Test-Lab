@@ -1,0 +1,113 @@
+# Налаштування UniFi AP (1st Gen) на базі LMDE 7 (Debian 13)
+
+Дана інструкція описує процес відновлення, оновлення та автономного налаштування точки доступу **UniFi UAP** за допомогою Docker-контейнера. Документація розроблена для використання в умовах обмеженої мережевої інфраструктури (університетські корпуси, ІОЦ).
+
+## 💻 Технічне середовище
+* **Host:** Lenovo ThinkPad X61 Tablet (Middleton BIOS, 6GB RAM, SSD 64GB)
+* **OS:** LMDE 7 (Debian 13 Trixie) x64
+* **Soft:** Docker, Docker-compose, OpenSSH Client
+* **Target Device:** UniFi AP (Model: UAP, 1st Gen, 2.4 GHz)
+
+---
+
+## 1. Підготовка мережі (Пряме підключення)
+При підключенні точки напряму до Ethernet-порту ThinkPad X61, необхідно призначити статичну IP-адресу дротовому інтерфейсу ноутбука.
+
+```bash
+# Приклад налаштування через IP (замініть eth0 на ваш інтерфейс)
+    sudo ip addr add 192.168.1.133/24 dev eth0
+    sudo ip link set eth0 up
+```
+---
+
+## 2. Розгортання UniFi Controller у Docker
+
+Використовується образ від **linuxserver**, оскільки він стабільно працює зі старими ревізіями заліза та не потребує встановлення Java/MongoDB у хост-систему.
+
+### Структура каталогу:
+```Bash
+mkdir ~/unifi-controller && cd ~/unifi-controller
+```
+### Вміст *docker-compose.yml*:
+```YAML
+version: "2.1"
+services:
+  unifi-controller:
+    image: lscr.io/linuxserver/unifi-controller:latest
+    container_name: unifi-controller
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Kyiv
+      - MEM_LIMIT=1024 # Оптимізація для систем з малою кількістю RAM
+    volumes:
+      - ./config:/config
+    network_mode: host # Обов'язково для L2 Discovery
+    restart: unless-stopped
+```
+### Запуск: 
+
+    `docker-compose up -d`
+
+### Доступ до GUI: 
+
+    `https://localhost:8443`
+
+---
+
+## 3. Процес Adoption (Прив'язка точки)
+
+Після ініціалізації WebUI необхідно виконати L3 Adoption через SSH:
+
+### Вхід на точку: 
+
+```Bash
+    ssh ubnt@192.168.1.20
+``` 
+
+(пароль за замовчуванням: ubnt).
+
+### Первинний Inform:
+```Bash
+    set-inform http://<IP_НОУТБУКА>:8080/inform
+```
+### Підтвердження: 
+У WebUI (вкладка **Devices**) натиснути **Adopt**.
+
+### Фіналізація: 
+Коли статус зміниться на **Adopting**, повторно виконати команду `set-inform` в SSH терміналі точки.
+
+---
+
+## 4. Налаштування для автономної роботи (Stand-alone)
+
+Щоб точка не вимикала Wi-Fi при відсутності зв'язку з контролером (після перенесення в інший корпус), виконайте:
+
+### Вимкнення *Connectivity Monitor*:
+Перейдіть у **Settings > System > Advanced**.
+
+Вимкніть **Wireless Meshing** та **New WiFi Device Autolink**.
+
+### Створення SSID:
+
+**Settings > WiFi** -> Додати назву мережі та WPA2 пароль.
+
+### Backup конфігурації:
+Всі дані зберігаються у локальній папці *./config*. Додатково рекомендується завантажити *.unf* бекап через **Settings > System > Backups**.
+
+## 5. Корисні команди для діагностики (DevOps Toolset)
+
+### Слухати DHCP запити від точки:
+```Bash
+    sudo tcpdump -i eth0 -n udp port 67 or port 68
+```
+
+### Пошук точки в підмережі:
+```Bash
+    sudo arp-scan --localnet
+```
+
+### Перевірка статусу всередині точки (SSH):
+```Bash
+    info
+```
