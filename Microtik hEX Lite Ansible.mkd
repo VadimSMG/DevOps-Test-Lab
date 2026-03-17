@@ -1,97 +1,97 @@
-Це чудова ідея! Власна база знань (Knowledge Base) — це фундамент для будь-якого DevOps-інженера. Цей конспект структурований так, щоб ви могли повернутися до нього, коли будете налаштовувати наступний сервер або роутер на роботі в ІОЦ.
-Конспект уроку: Ansible + MikroTik API (IaC Basic)
+# Ansible + MikroTik API (IaC Basic)
 
-Дата: 16 березня 2026 р.
+Дата: *16 березня 2026 р.*
 
-Платформа: Lenovo ThinkPad X61t (LMDE 7)
+Платформа: *Lenovo ThinkPad X61t (LMDE 7)*
 
-Ціль: Налаштування L3-конфігурації MikroTik hEX Lite через Ansible.
-1. Підготовка оточення (Environment Setup)
+Ціль: *Налаштування L3-конфігурації MikroTik hEX Lite через Ansible.*
+
+## 1. Підготовка оточення (Environment Setup)
 
 Для ізоляції проекту від системних бібліотек Python ми використали Virtual Environment (venv).
 
-    Створення venv: python3 -m venv .venv
+### Створення venv:
 
-    Активація: source .venv/bin/activate
+`python3 -m venv .venv`
 
-    Залежності:
+### Активація:
 
-        ansible: основний двигун автоматизації.
+`source .venv/bin/activate`
 
-        librouteros: Python-бібліотека для взаємодії з MikroTik API.
+### Залежності:
 
-    Конфігурація інтерпретатора: У файлі inventory.ini обов'язково вказуємо шлях до Python всередині venv:
-    ansible_python_interpreter=./.venv/bin/python
+  * *ansible*: основний двигун автоматизації.
+  * *librouteros*: Python-бібліотека для взаємодії з MikroTik API.
 
-2. Основні інструменти перевірки (Linting & Validation)
+### Конфігурація інтерпретатора:
+У файлі *inventory.ini* обов'язково вказуємо шлях до Python всередині venv:
 
-Ми навчилися перевіряти код до моменту його запуску на "залізі":
+`ansible_python_interpreter=./.venv/bin/python`
 
-    ansible-playbook --syntax-check: Базова перевірка структури YAML.
+## 2. Основні інструменти перевірки (Linting & Validation)
 
-    ansible-lint: Глибокий аналіз на відповідність стандартам (Best Practices).
+Перевірка коду до моменту його запуску на "залізі":
 
-        Урок: YAML чутливий до регістру true/false та зайвих пробілів (trailing spaces).
+  * *ansible-playbook --syntax-check*: Базова перевірка структури YAML.
+  * *ansible-lint*: Глибокий аналіз на відповідність стандартам (Best Practices).
+  * *ansible-playbook --check*: "Dry run" — симуляція змін без їх внесення.
 
-    ansible-playbook --check: "Dry run" — симуляція змін без їх внесення.
+>Урок: YAML чутливий до регістру true/false та зайвих пробілів (trailing spaces).
 
-3. Робота з MikroTik API через Ansible
+## 3. Робота з MikroTik API через Ansible
 
-Ми використовували модуль community.routeros.api. Головні висновки:
-Проблема лапок та синтаксису
+Використовувався модуль *community.routeros.api*.
+Головні висновки: Проблема лапок та синтаксису
 
-API MikroTik специфічно обробляє запити WHERE.
+### API MikroTik специфічно обробляє запити WHERE.
+#### Помилка:
+Використання одинарних лапок всередині одинарних призводить до збою парсингу.
 
-    Помилка: Використання одинарних лапок всередині одинарних призводить до збою парсингу.
+#### Рішення:
+Використання YAML-блоку > для складних рядків update.
 
-    Рішення: Використання YAML-блоку > для складних рядків update.
-
-Ідемпотентність (Idempotency)
+### Ідемпотентність (Idempotency)
 
 Це здатність плейбука запускатися багато разів без помилок, якщо зміни вже внесені.
 
-    Метод "Перевірка через Print":
+#### Метод "Перевірка через Print":
 
-        Отримуємо стан: cmd: "print" -> register: result.
+Отримуємо стан:
+`cmd: "print" -> register: result`
 
-        Фільтруємо дані: when: "'192.168.88.1/24' not in (result.msg | map(attribute='address') | list)".
+Фільтруємо дані:
+`when: "'192.168.88.1/24' not in (result.msg | map(attribute='address') | list)"`
 
-    Метод "Ігнорування": Використання ignore_errors: true для кроків, де MikroTik сам блокує дублікати (наприклад, DHCP Server).
+#### Метод "Ігнорування":
+Використання ignore_errors: true для кроків, де MikroTik сам блокує дублікати (наприклад, DHCP Server).
 
-4. Вирішені технічні кейси
-Кейс	Проблема	Вирішення
-Connection	Спроба SSH на закритий порт	Використання connection: local + API порт 8728.
-Register error	register всередині параметрів модуля	Виправлення відступів (indentation) у NeoVim.
-Identity update	Помилка missing .id	Додавання .id=*0 або використання add замість update.
-Port assignment	Складний WHERE з AND	Спрощення до перевірки наявності інтерфейсу в загальному списку.
-5. Налаштування NeoVim для YAML
+## 4. Вирішені технічні кейси
+|Кейс           |Проблема                            |Вирішення                                                      |
+|---------------|------------------------------------|---------------------------------------------------------------|
+|Connection     |Спроба SSH на закритий порт         |Використання connection: local + API порт 8728                 |
+|Register error |register всередині параметрів модуля|Виправлення відступів (indentation) у NeoVim                   |
+|Identity update|Помилка missing .id                 |Додавання .id=*0 або використання add замість update           |
+|Port assignment|Складний WHERE з AND                |Спрощення до перевірки наявності інтерфейсу в загальному списку|
 
+## 5. Налаштування NeoVim для YAML
 Для комфортної роботи на X61t ми визначили ключові налаштування:
 
-    expandtab: пробіли замість Tab.
+  * *expandtab*: пробіли замість Tab
+  * *shiftwidth=2*: стандартний відступ для Ansible
+  * *cursorcolumn*: візуальний контроль вертикалі для register, loop, when
 
-    shiftwidth=2: стандартний відступ для Ansible.
-
-    cursorcolumn: візуальний контроль вертикалі для register, loop, when.
-
-6. Фінальний результат плейбука
+## 6. Фінальний результат плейбука
 
 Плейбук успішно виконує:
 
-    Перейменування Bridge.
+     1. Перейменування Bridge.
+     2. Динамічне додавання портів ether2-ether5.
+     3. Налаштування WAN (DHCP-client).
+     4. Створення LAN IP, DHCP Pool та Server.
+     5. Налаштування NAT (Masquerade) для виходу в інтернет.
+     6. Зміна імені пристрою (System Identity).
 
-    Динамічне додавання портів ether2-ether5.
+## Наступні кроки для розвитку (Homework):
 
-    Налаштування WAN (DHCP-client).
-
-    Створення LAN IP, DHCP Pool та Server.
-
-    Налаштування NAT (Masquerade) для виходу в інтернет.
-
-    Зміна імені пристрою (System Identity).
-
-Наступні кроки для розвитку (Homework):
-
-    Вивчити Ansible Vault для шифрування паролів.
-
-    Спробувати створити Ansible Role, щоб розділити цей великий файл на окремі логічні блоки (Network, System, Firewall).
+  * Вивчити Ansible Vault для шифрування паролів.
+  * Спробувати створити Ansible Role, щоб розділити цей великий файл на окремі логічні блоки (Network, System, Firewall).
