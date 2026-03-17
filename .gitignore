@@ -11,3 +11,6 @@
 # Temp OS files
 .DS_Store
 Thumbs.db
+
+# Virtual Environment
+.venv/
