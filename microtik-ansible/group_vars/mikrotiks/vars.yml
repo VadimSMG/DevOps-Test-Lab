@@ -1,0 +1,17 @@
+# Set connection type to API
+ansible_connection: ansible.netcommon.httpapi
+
+# Set system type for MikroTik RouterOS
+ansible_network_os: community.routeros.api
+
+# Set config for HTTP API
+ansible_httpapi_use_ssl: false          # MikroTik default use HTTP on 8728
+ansible_httpapi_port: 8728              # Default port 
+ansible_httpapi_validate_certs: false   # Turn off setificates for lab tests
+
+# Path to Python (venv)
+ansible_python_interpreter: /home/sandrat/DevOps-Test-Lab/microtik-ansible/.venv/bin/python
+
+# Common Ansible creds
+ansible_user: admin
+ansible_password: "{{ vault_ansible_password }}"

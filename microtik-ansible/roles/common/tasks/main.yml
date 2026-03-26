@@ -1,10 +1,7 @@
 ---
-- name: Set System Identity
-  community.routeros.api:
-    path: "system identity"
-    update: ".id=*0 name={{ inventory_hostname }}"
-
-- name: Ensure DNS is configured
+- name: DNS | Ensure servers are configured
   community.routeros.api:
     path: "ip dns"
-    update: "servers=1.1.1.1,8.8.8.8"
+    update:
+      servers: "1.1.1.1,8.8.8.8"
+      allow-remote-requests: "yes"
