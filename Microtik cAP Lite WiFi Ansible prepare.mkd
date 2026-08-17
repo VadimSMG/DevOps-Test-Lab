@@ -10,7 +10,7 @@
 ### Connect via MAC and set admin password
 `sudo mactelnet b8:69:f4:00:4a:76 enp0s25`
 ### Set static IP for cAP Ethernet
-`/ip address add address=192.168.88.1/24 interface=ether1`
+`/ip address add address=192.168.88.2/24 interface=ether1`
 ### Enable SSH on cAP Ethernet
 `/ip service enable ssh`
 ### Set admin password
