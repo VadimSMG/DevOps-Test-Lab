@@ -1,0 +1,27 @@
+---
+- name: Phase 0 - Remove Default Config via Serial
+  hosts: mikrotik_bootstrap
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Configure MikroTik IP via Serial
+      ansible.builtin.expect:
+        command: "picocom -b {{ bootstrap_baud_rate }} -q {{ bootstrap_serial_port }}\r"
+        responses:
+          # 1. Логін (надсилаємо Enter в кінці)
+          "(?i)mikrotik login :": "admin\r"   
+          # 2. Пароль (просто Enter, бо дефолтний порожній)
+          "(?i)password :": "\r"
+          # 3. Skip licence
+          "(?i)do you want to see the software license? [y/n]:": "n\r"
+          # 4. Зміна дефолтного паролю (RouterOS v7)
+          "(?i)new password>:": "{{ vault_bootstrap_serial_password }}\r"
+          "(?i)repeat new password:>": "{{ vault_bootstrap_serial_password }}\r"
+          # 5. Налаштування IP та Шлюзу в один крок (обходимо дублювання ключів)
+          #Після отримання промпту відправляємо обидві команди, розділені \r
+          "\\[admin@MikroTik\\] >": "/system reset-configuration no-defaults=yes skip-backup=yes \r \x01 \x18"
+          "(?i)dangerous! reset anyway? [y/n]:)": "y"
+    - name: Waiting for reboot
+      ansible.builtin.pause:
+        seconds: 40
+        prompt: "Waiting for MikroTik to reboot into clean state..."

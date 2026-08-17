@@ -1,8 +1,0 @@
----
-# Значення за замовчуванням (можна змінити для кожного пристрою)
-router_wan_interface: ether1
-router_lan_interface: bridge-lan
-router_lan_address: 192.168.88.1/24
-router_dhcp_pool: 192.168.88.10-192.168.88.100
-router_dns_servers: 1.1.1.1,8.8.8.8
-router_use_nat: true

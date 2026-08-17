@@ -1,7 +1,0 @@
----
-- name: DNS | Ensure servers are configured
-  community.routeros.api:
-    path: "ip dns"
-    update:
-      servers: "1.1.1.1,8.8.8.8"
-      allow-remote-requests: "yes"
