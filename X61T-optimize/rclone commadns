@@ -1,0 +1,5 @@
+# GDrive connect
+rclone mount gdrive-donntu: ~/GDrive-donntu/ --vfs-cache-mode writes --daemon
+
+# OneDrive connect
+rclone mount onedrive-ioc-donntu: ~/OneDrive-donntu --vfs-cache-mode full --vfs-cache-max-age 24h --daemon
