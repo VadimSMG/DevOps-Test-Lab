@@ -1,10 +1,10 @@
 - name: Bootsrap MikroTik over Serial
-  hosts: localhost
+  hosts: mikrotik_bootstrap
   gather_facts: false
   tasks:
     - name: Apply MikroTik serial bootstrap via Python
       ansible.builtin.command:
-        cmd: "{{ ansible_playbook_python }} playbooks/scripts/mikrotik_reset.py {{ bootstrap_serial_port }} {{ bootstrap_baud_rate }} {{ bootstrap_new_ip }}"
+        cmd: "{{ ansible_playbook_python }} ../scripts/mikrotik_reset.py {{ bootstrap_serial_port }} {{ bootstrap_baud_rate }} {{ bootstrap_new_ip }}"
       environment:
         BOOTSTRAP_PASS: "{{ vault_bootstrap_serial_password }}"
       delegate_to: localhost
