@@ -9,7 +9,17 @@ import pexpect
 port = sys.argv[1]
 baud = sys.argv[2]
 password = os.getenv("BOOTSTRAP_PASS")
+# Check if password variable exits
+if not password:
+    print("[-] ERROR: BOOTSTRAP_PASS environment variable is not set!")
+    sys.exit(1)
 new_ip = sys.argv[3]
+
+# Custom flags for each step
+login_u = False # Success login input
+login_p = False # Success pasworld input
+new_p = False # Success set new password
+repeat_p = False # Success repeat new password
 
 print(f"Connecting to {port}...")
 
@@ -20,18 +30,15 @@ print(f"Connecting to {port}...")
 child = pexpect.spawn(f"picocom -b {baud} {port} -q", encoding='utf-8', timeout=30)
 # Add PTY log to file
 child.logfile_read = sys.stdout
+# Send empty line for pushing picocom
+child.sendline("\r")
 # Variable for check device boobstrap.
 bootstrapped = False
 # Variables for check device reset
 reset_send = False
-# Add iterations for prevent endless loop
-iteration = 0
-state = "INIT"
 # Universal pattern cycle for evry MikroTik serial answer
 print("Phase 1: Sending factory reset...")
 while True:
-    if not reset_send:
-        child.sendline("\r")
     try:
         idx = child.expect(
             [
@@ -50,11 +57,19 @@ while True:
             timeout=10,
         )
         if idx == 0:
-            print("Loggining in CLI...")
-            child.sendline("admin") # Default login RouterOSv7: "admin"
+            if not login_u:
+                print("Loggining in CLI...")
+                child.sendline("admin") # Default login RouterOSv7: "admin"
+                login_u = True
+            else:
+                continue
         elif idx == 1:
-            print("Sending password...")
-            child.sendline(password if bootstrapped else "") # Default password RouterOSv7 is empty
+            if not login_p:
+                print("Sending password...")
+                child.sendline(password if bootstrapped else "\r") # Default password RouterOSv7 is empty
+                login_p = True
+            else:
+                continue
         elif idx == 2:
             print("Skipping EULA...")
             child.sendline("n\r") # Send "No" for license prompt
@@ -72,19 +87,28 @@ while True:
                     time.sleep(1)
                 else:
                     print("Reset already triggered...")
+                    continue
             else:
-                print("Setting new password...")
-                child.sendline(password+"\r")
+                if not new_p:
+                    print("Setting new password...")
+                    child.sendline(password+"\r") 
+                    new_p = True
+                else:
+                    continue
         elif idx == 5:
-            print("Repeating new password...")
-            child.sendline(password+"\r")
+            if not repeat_p:
+                print("Repeating new password...")
+                child.sendline(password)
+                repeat_p = True
+            else:
+                continue
         elif idx == 6:
             if not reset_send:
                 print("Reached CLI. Triggering factory reset...") 
                 child.sendline("/system reset-configuration no-defaults=yes skip-backup=yes\r") # Send bootstrap command 
                 reset_send = True
             elif bootstrapped:
-                print("Surcessfully logged in! Setting static IP...")
+                print("Successfully logged in! Setting static IP...")
                 child.sendline(f"/ip address add address={new_ip}/24 interface=ether1")
                 time.sleep(2)
                 break
@@ -92,16 +116,19 @@ while True:
             print("Confirming factory reset!")
             child.sendline("y\r")
             bootstrapped = True
-            print("Factory reset ininitated! Waitng for reboot 60 sec")
+            login_u = False
+            login_p = False
+            print("Factory reset initiated! Waitng for reboot 60 sec")
             time.sleep(60)
         elif idx == 8:
-            pass
+            child.sendline("\r")
+            continue
         elif idx == 9:
             child.sendline(" ") # Send space for sipping pagening "--More--"
         elif idx == 10:
             raise TimeoutError ("Hardware stuck or stop answering!") 
     except pexpect.TIMEOUT:
-        print(f"[-] Timeout reached at state: {state}. Hardware unresponsive.")
+        print("[-] Hardware unresponsive.")
         sys.exit(1)
 print("Bootstraping complete! EOF")
 child.sendcontrol("a")
