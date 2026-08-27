@@ -14,3 +14,4 @@ Thumbs.db
 
 # Virtual Environment
 .venv/
+.vault_pass
