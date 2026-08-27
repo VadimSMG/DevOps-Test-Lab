@@ -1,7 +1,5 @@
 ---
 bootstrap_serial_port: "/dev/ttyS0"
 bootstrap_baud_rate: 115200
-bootstrap_new_ip: "13.31.5.2/24"
+bootstrap_new_ip: "13.31.5.2"
 bootstrap_interface: "ether1"
-bootstrap_gateway: "13.31.5.1"
-bootstrap_bridge: "br-root"

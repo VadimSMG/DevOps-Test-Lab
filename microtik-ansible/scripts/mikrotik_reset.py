@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser(description="MikroTik Serial Bootstrap FSM")
 parser.add_argument("port", help="Serial port (e.g., /dev/ttyS0)")
 parser.add_argument("ip", help="Temporary static IP to assign (e.g., 192.168.13.2)")
 parser.add_argument("baud", help="Baudrate connection speed (e.g., 115200)")
+parser.add_argument("interface", help="Temporary interface for static IP (e.g., ether1)")
 args = parser.parse_args()
 
 # Vars send by ansible playbook: /playbooks/00_reset.yml. Vars from file: /group_vars/mikrotik_bootstrap/vars.yml
@@ -102,7 +103,7 @@ while True:
                 reset_send = True
             elif bootstrapped:
                 print("Successfully logged in! Setting static IP...")
-                child.sendline(f"/ip address add address={args.ip}/24 interface=ether1")
+                child.sendline(f"/ip address add address={args.ip}/24 interface={args.interface}")
                 time.sleep(2)
                 break
         elif idx == 8:

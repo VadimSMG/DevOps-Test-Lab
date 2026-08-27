@@ -1,25 +1,20 @@
----
-- name: Phase 0 - Remove Default Config via Serial
+- name: Bootsrap MikroTik over Serial
   hosts: mikrotik_bootstrap
   gather_facts: false
-  connection: local
   tasks:
-    - name: "Configure MikroTik IP via Serial"
-      ansible.builtin.expect:
-        command: "picocom -b {{ bootstrap_baud_rate }} -q {{ bootstrap_serial_port }}\r"
-        timeout: 30
-        responses:
-          # 1. Логін (надсилаємо Enter в кінці)
-          "(?i)mikrotik login.*": "admin\r"
-          # 2. Пароль (просто Enter, бо дефолтний порожній)
-          "(?i)password.*": "\r"
-          # 3. Skip licence
-          "(?i).*license.*": "n\r"
-          # 4. Skip first help message
-          "(?i).*Welcome to RouterOS.*": "\r"
-          # 5. Skip creating password  (RouterOS v7)
-          "(?i)new password.*": "\x03"
-          # 6. Налаштування IP та Шлюзу в один крок (обходимо дублювання ключів)
-          # Після отримання промпту відправляємо обидві команди, розділені \r
-          "\\[admin@MikroTik\\]\\s*\\>": "/system reset-configuration no-defaults=yes skip-backup=yes \r"
-          "(?i)dangerous.*": "y\r"
+    - name: Apply MikroTik serial bootstrap via Python (pexpect)
+      ansible.builtin.command:
+        cmd: >-
+          {{ ansible_playbook_python }} 
+          {{ playbook_dir }}/../scripts/mikrotik_reset.py
+          {{ bootstrap_serial_port }}
+          {{ bootstrap_new_ip }}
+          {{ bootstrap_baud_rate }}
+          {{ bootstrap_interface }}
+      delegate_to: localhost
+      changed_when: true
+      register: serial_bootstrap
+
+    - name: Show Python script output
+      ansible.builtin.debug:
+        msg: "{{ serial_bootstrap.stdout_lines }}"
