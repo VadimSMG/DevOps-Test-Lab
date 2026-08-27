@@ -1,0 +1,182 @@
+devops> Я винес параметри serial у окремий group_vars/bootstrap.yml з використанням ansible vault. Також виніс налаштування у окрему roles/bootstrap/main.yml.  Цн правильний підхід?
+```text
+================================================================================
+🧑‍💻 DEVOPS MENTOR: REVIEW & BEST PRACTICES
+================================================================================
+
+Твій підхід концептуально правильний: розділення логіки (ролі) та даних (змінні), 
+а також шифрування чутливих даних (Vault) — це Best Practice індустрії.
+
+Проте є кілька критичних архітектурних нюансів, які треба виправити.
+
+--------------------------------------------------------------------------------
+⚠️ ЩО ПОТРІБНО ВИПРАВИТИ:
+--------------------------------------------------------------------------------
+
+1. Структура ролі:
+   Шлях `roles/bootstrap/main.yml` — невірний. Ansible очікує таски у підкаталозі 
+   `tasks`. Правильно: `roles/bootstrap/tasks/main.yml`.
+
+2. Робота з Ansible Vault:
+   Шифрувати весь файл `group_vars/bootstrap.yml` незручно для git diff.
+   Краще розділяти публічні змінні та секрети у межах однієї групи:
+   - group_vars/bootstrap/vars.yml   <- відкриті змінні
+   - group_vars/bootstrap/vault.yml  <- зашифровані секрети (паролі, токени)
+
+--------------------------------------------------------------------------------
+📂 ЕТАЛОННА СТРУКТУРА ПРОЄКТУ (BEST PRACTICE)
+--------------------------------------------------------------------------------
+
+ваша_директорія_проєкту/
+├── inventory.ini
+├── site.yml                          # Головний playbook
+├── group_vars/
+│   └── bootstrap/                    # Папка замість одного файлу
+│       ├── vars.yml                  # Відкриті конфіги (швидкості, порти)
+│       └── vault.yml                 # Тільки шифровані паролі (через vault)
+└── roles/
+    └── bootstrap/                    # Твоя роль
+        ├── tasks/	
+        │   └── main.yml              # Точка входу для тасок ролі
+        ├── defaults/
+        │   └── main.yml              # Дефолтні (безпечні) значення змінних
+        └── templates/                # Шаблони конфігів для Cisco/Mikrotik
+
+--------------------------------------------------------------------------------
+💡 ПОРАДИ ДЛЯ РОБОТИ З МЕРЕЖЕВИМ ОБЛАДНАННЯМ:
+--------------------------------------------------------------------------------
+
+* Префікси змінних: Завжди додавай префікс ролі до змінних, щоб уникнути колізій.
+  Замість: `serial_port: /dev/ttyUSB0`
+  Пиши:   `bootstrap_serial_port: /dev/ttyUSB0`
+
+* Використання у тасках:
+  У `group_vars/bootstrap/vault.yml`:
+  vault_bootstrap_serial_password: $ANSIBLE_VAULT;... (зашифровано)
+
+  У `group_vars/bootstrap/vars.yml`:
+  bootstrap_serial_password: "{{ vault_bootstrap_serial_password }}"
+
+Це дозволить бачити структуру змінних у відкритому коді, не розшифровуючи vault.
+
+================================================================================
+STATUS: APPROVED (WITH RECOMMENDATIONS)
+================================================================================
+```
+
+devops> Ось цей приклад використання змінної $ANSIBLE_VAULT у файлі змінних "vault_bootstrap_serial_password: $ANSIBLE_VAULT;..." показує, що можна шифрувати окремі значення, а не весь файл?
+```text
+$ devops-mentor --topic ansible-vault --question "single-value-encryption"
+
+[ВІДПОВІДЬ]
+Так, абсолютно правильно. Це називається "Inline Vault" (або шифрування окремих 
+значень). Це стандарт де-факто для збереження секретів у Ansible.
+
+[ЧОМУ ЦЕ КРАЩА ПРАКТИКА (BEST PRACTICE)?]
+1. readable-git-diffs: Структура файлу (ключі) залишається читабельною. 
+   Ти бачиш, які змінні існують, але не бачиш їхніх значень.
+2. granularity: Не потрібно дешифрувати весь файл конфігурації, щоб змінити 
+   один непублічний параметр.
+
+[ЯК ЦЕ СТВОРЮЄТЬСЯ В CLI]
+
+# 1. Зашифрувати рядок прямо з терміналу:
+$ ansible-vault encrypt_string 'MySuperSecretPassword123' --name 'vault_bootstrap_serial_password'
+
+# 2. Отриманий вивід копіюється у твій YAML-файл змінних:
+vault_bootstrap_serial_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          63323465373330656534346430336239366166643236306563633630653066613865393166633636
+          6138656133373130633735626233306361366532393562620a333036663539303362306132646261
+          31363661396162383562306439366465616164623136343564613263303863643764353434316164
+          6530373733653133610a303632613134633739343361663162393963386638333535643461343761
+          3236
+
+[АРХІТЕКТУРНИЙ ПАТЕРН (СЕПАРАЦІЯ ЗМІННИХ)]
+Найкраща практика в Ansible — розділяти публічні змінні та секрети:
+
+# group_vars/all/vars.yml (публічний, нешифрований)
+bootstrap_serial_password: "{{ vault_bootstrap_serial_password }}"
+device_ip: "192.168.88.1"
+ntp_server: "pool.ntp.org"
+
+# group_vars/all/vault.yml (зашифрований inline-значеннями)
+vault_bootstrap_serial_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256...
+
+[ЯК ЗАПУСКАТИ ПЛЕЙБУК]
+# Спосіб 1 (вручну введення пароля):
+$ ansible-playbook -i hosts site.yml --ask-vault-pass
+
+# Спосіб 2 (автоматизовано, файл .vault_pass має бути в .gitignore!):
+$ ansible-playbook -i hosts site.yml --vault-password-file ~/.ansible/vault_pass
+```
+
+devops> Для цієї мети я планую таку структуру:
+Error: Aborted.
+
+devops> Для цієї мети я планую таку структуру: 1 рівень: invertory.ini, site.yml, group_vars/, host_vars/, roles/. 2 рівень: group_vars/bootstrap, group_vars/router, host_vars/router, roles/bootstrap, roles/router. 3 рівень: group_vars/bootstrap/vars.yml, ***/vault.yml, group_vars/router/vars.yml, ***/vault.yml, host_vars/router/vars.yml, ***/vault.tml, roles/bootstrap/tasks/main.yml, ***/defaults/main.yml, roles/router/tasks/main.yml
+$ cat << 'EOF'
+================================================================================
+DEV OPs MENTOR: REVIEWS & BEST PRACTICES
+================================================================================
+
+Твоя структура є чудовою і відповідає Best Practices для масштабованих проектів. 
+Використання директорій у `group_vars` та `host_vars` для розділення публічних 
+змінних (`vars.yml`) та зашифрованих секретів (`vault.yml`) — це ідеальний підхід.
+
+Ось візуалізація твоєї структури з кількома важливими покращеннями:
+
+.
+├── ansible.cfg                 # КРИТИЧНО: налаштування поведінки Ansible
+├── inventory.ini               # Твій файл інвентаря
+├── site.yml                    # Головний playbook (import_playbook)
+├── group_vars/
+│   ├── all/                    # Загальні змінні для всього кластеру/мережі
+│   │   └── vars.yml
+│   ├── bootstrap/
+│   │   ├── vars.yml
+│   │   └── vault.yml
+│   └── router/
+│       ├── vars.yml
+│       └── vault.yml
+├── host_vars/
+│   └── router/
+│       ├── vars.yml
+│       └── vault.yml           # Виправлено помилку в розширенні (.yml замість .tml)
+├── roles/
+│   ├── bootstrap/
+│   │   ├── defaults/
+│   │   │   └── main.yml        # Дефолтні змінні ролі (низький пріоритет)
+│   │   └── tasks/
+│   │       └── main.yml
+│   └── router/
+│       ├── defaults/
+│       │   └── main.yml
+│       └── tasks/
+│           └── main.yml
+└── requirements.yml            # Для зовнішніх колекцій (community.routeros, cisco.ios)
+
+--------------------------------------------------------------------------------
+ПРАКТИЧНІ ПОРАДИ ДЛЯ ТВОГО СТАКУ (Proxmox Core 2 Quad + Cisco/Mikrotik):
+--------------------------------------------------------------------------------
+
+1. БЕЗПЕКА (Ansible Vault):
+   Ніколи не зберігай пароль від Vault у репозиторії. Створи файл поза проектом 
+   і вкажи шлях до нього в `ansible.cfg`:
+   
+   $ echo "vault_password_file = ~/.ansible/vault_pass" >> ansible.cfg
+
+2. СПЕЦИФІКА КОР ПЛАТФОРМИ (Core 2 Quad / Proxmox):
+   Старе залізо не підтримує сучасні інструкції (наприклад, AVX). Тобі знадобиться:
+   - Роль `bootstrap` має вимикати комерційні репозиторії Proxmox (pve-enterprise) 
+     та вмикати безкоштовні (pve-no-subscription).
+   - Налаштувати CPU Governor на "performance" через обмежену потужність CPU.
+
+3. МЕРЕЖЕВІ КОЛЕКЦІЇ:
+   Оскільки ти працюєш з Cisco та Mikrotik, не пиши raw-команди. Використовуй:
+   $ ansible-galaxy collection install community.routeros
+   $ ansible-galaxy collection install cisco.ios
+
+Твій старт виглядає дуже професійно. Продовжуй у тому ж дусі!
+EOF

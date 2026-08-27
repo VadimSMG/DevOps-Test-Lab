@@ -1,0 +1,20 @@
+- name: Bootsrap MikroTik over Serial
+  hosts: mikrotik_bootstrap
+  gather_facts: false
+  tasks:
+    - name: Apply MikroTik serial bootstrap via Python (pexpect)
+      ansible.builtin.command:
+        cmd: >-
+          {{ ansible_playbook_python }} 
+          {{ playbook_dir }}/../scripts/mikrotik_reset.py
+          {{ bootstrap_serial_port }}
+          {{ bootstrap_new_ip }}
+          {{ bootstrap_baud_rate }}
+          {{ bootstrap_interface }}
+      delegate_to: localhost
+      changed_when: true
+      register: serial_bootstrap
+
+    - name: Show Python script output
+      ansible.builtin.debug:
+        msg: "{{ serial_bootstrap.stdout_lines }}"

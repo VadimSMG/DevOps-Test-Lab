@@ -1,0 +1,7 @@
+---
+router_dns_servers:
+  - 1.1.1.1
+  - 8.8.8.8
+router_ntp_servers:
+  - pool.ntp.org
+

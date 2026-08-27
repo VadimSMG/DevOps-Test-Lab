@@ -1,0 +1,31 @@
+---
+- name: Phase 1 - First config via Serial for SSH
+  hosts: mikrotik_bootstrap
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Configure MikroTik IP via Serial
+      ansible.builtin.expect:
+        command: "picocom -b {{ bootstrap_baud_rate }} -q {{ bootstrap_serial_port }} \r"
+        responses:
+          # 1. Логін (надсилаємо Enter в кінці)
+          (?i)mikrotik login: "admin\r"
+          
+          # 2. Пароль (просто Enter, бо дефолтний порожній)
+          (?i)password: "\r"
+          
+          # 3. Зміна дефолтного паролю (RouterOS v7)
+          (?i)new password: "{{ vault_bootstrap_serial_password }}\r"
+          (?i)repeat new password: "{{ vault_bootstrap_serial_password }}\r"
+
+          # 4. Створення керуючого bridge та вктивація ssh доступу.
+          "\\[admin@MikroTik\\] >": 
+            # Safe remove default bridges
+            - "/interface bridge remove [find name=bridgeLocal] 2>dev/null || true\r"
+            - "/interface bridge remove [find name=bridge] 2>dev/null || true\r"
+            # Set own management bridge
+            - "/interface bridge add name={{ bootstrap_bridge }}\r"
+            - "/interface bridge port add bridge={{ bootstrap_bridge }} interface={{ bootstrap_interface }}\r"
+            - "/ip address add address={{ bootstrap_new_ip }} interface={{ bootstrap_bridge }}\r"
+            - "/ip service enable ssh\r"
+            - "\x01\x18"
